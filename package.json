@@ -72,7 +72,7 @@
 		"binding.gyp",
 		"index.js",
 		"index.mjs",
-		"index.d.ts"
+		"README.md"
 	],
 	"binary": {
 		"napi_versions": [
