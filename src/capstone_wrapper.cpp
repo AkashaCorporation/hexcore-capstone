@@ -203,8 +203,8 @@ Napi::Value CapstoneWrapper::DisasmAsync(const Napi::CallbackInfo& info) {
     // Create and queue the async worker
     DisasmAsyncWorker* worker = new DisasmAsyncWorker(
         env,
-        handle_,
         arch_,
+        mode_,
         std::move(codeVec),
         address,
         count,

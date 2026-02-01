@@ -312,16 +312,16 @@ class DisasmAsyncWorker : public Napi::AsyncWorker {
 public:
     DisasmAsyncWorker(
         Napi::Env env,
-        csh handle,
         cs_arch arch,
+        cs_mode mode,
         std::vector<uint8_t> code,
         uint64_t address,
         size_t count,
         bool includeDetail
     ) : Napi::AsyncWorker(env),
         deferred_(Napi::Promise::Deferred::New(env)),
-        handle_(handle),
         arch_(arch),
+        mode_(mode),
         code_(std::move(code)),
         address_(address),
         count_(count),
@@ -340,11 +340,24 @@ public:
      * Execute in background thread - no V8/N-API calls allowed here!
      */
     void Execute() override {
+        csh handle;
+        cs_err err = cs_open(arch_, mode_, &handle);
+
+        if (err != CS_ERR_OK) {
+            error_ = err;
+            return;
+        }
+
+        // Set detail option if requested
+        if (includeDetail_) {
+            cs_option(handle, CS_OPT_DETAIL, CS_OPT_ON);
+        }
+
         cs_insn* insn = nullptr;
 
         // Perform disassembly in background thread
         numInsns_ = cs_disasm(
-            handle_,
+            handle,
             code_.data(),
             code_.size(),
             address_,
@@ -353,7 +366,8 @@ public:
         );
 
         if (numInsns_ == 0) {
-            error_ = cs_errno(handle_);
+            error_ = cs_errno(handle);
+            cs_close(&handle);
             return;
         }
 
@@ -397,6 +411,7 @@ public:
 
         // Free Capstone memory
         cs_free(insn, numInsns_);
+        cs_close(&handle);
     }
 
     /**
@@ -425,8 +440,8 @@ public:
 
 private:
     Napi::Promise::Deferred deferred_;
-    csh handle_;
     cs_arch arch_;
+    cs_mode mode_;
     std::vector<uint8_t> code_;
     uint64_t address_;
     size_t count_;
