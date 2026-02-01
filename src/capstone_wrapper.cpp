@@ -136,6 +136,16 @@ Napi::Value CapstoneWrapper::Disasm(const Napi::CallbackInfo& info) {
     cs_insn* insn;
     size_t numInsns = cs_disasm(handle_, code, codeSize, address, count, &insn);
 
+    if (numInsns == 0) {
+        cs_err err = cs_errno(handle_);
+        if (err != CS_ERR_OK) {
+            Napi::Error::New(env, std::string("Capstone disasm error: ") + cs_strerror(err))
+                .ThrowAsJavaScriptException();
+            return env.Null();
+        }
+        return Napi::Array::New(env);
+    }
+
     // Convert to JavaScript array
     Napi::Array result = Napi::Array::New(env, numInsns);
 
