@@ -21,7 +21,7 @@
     "test": "node test/test.js",
     "clean": "node-gyp clean",
     "prepare": "npm run build",
-    "build:deps": "cmake -S deps/capstone -B deps/capstone/build -DCMAKE_BUILD_TYPE=Release -DCAPSTONE_BUILD_TESTS=OFF -DCAPSTONE_BUILD_SHARED=OFF -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL && cmake --build deps/capstone/build --config Release"
+    "build:deps": "cmake -S deps/capstone -B deps/capstone/build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCAPSTONE_BUILD_STATIC_RUNTIME=OFF -DCAPSTONE_BUILD_TESTS=OFF -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL -DCMAKE_C_FLAGS=/MD -DCMAKE_CXX_FLAGS=/MD -DCMAKE_C_FLAGS_RELEASE=/MD -DCMAKE_CXX_FLAGS_RELEASE=/MD && cmake --build deps/capstone/build --config Release"
   },
   "keywords": [
     "capstone",
