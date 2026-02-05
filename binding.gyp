@@ -22,6 +22,7 @@
           "msvs_settings": {
             "VCCLCompilerTool": {
               "ExceptionHandling": 1,
+              "RuntimeLibrary": 2,
               "AdditionalIncludeDirectories": [
                 "<(module_root_dir)/deps/capstone/include"
               ]
