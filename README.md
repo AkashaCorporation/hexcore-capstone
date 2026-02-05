@@ -2,7 +2,7 @@
 
 Modern Node.js bindings for [Capstone](https://capstone-engine.org) disassembler engine using N-API.
 
-[![npm version](https://img.shields.io/npm/v/hexcore-capstone?color=brightgreen)](https://www.npmjs.com/package/hexcore-capstone)
+[![npm version](https://badge.fury.io/js/hexcore-capstone.svg)](https://www.npmjs.com/package/hexcore-capstone)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
@@ -171,13 +171,6 @@ npm test
 > **Note:** Use `--recursive` to clone the vendored Capstone submodule.
 
 ## Changelog
-
-### v1.3.0
--  **Async Worker Rewrite**: Complete rewrite using `std::variant` and intermediate structures for robust, architecture-agnostic detail handling
--  **RISC-V Support**: Added full support for RISC-V architecture (sync & async)
--  **Expanded Type Definitions**: Complete TypeScript interfaces for all architectures (MIPS, PPC, SPARC, SystemZ, XCore, M68K, RISC-V)
--  **Enhanced Testing**: Added robust tests for async detail mode and operand structure verification
--  **Package Improvements**: Fixed published files to include `index.d.ts` and `README.md`
 
 ### v1.1.0
 -  Add `disasmAsync()` for non-blocking disassembly

@@ -91,6 +91,4 @@ unsigned short X86_register_map(unsigned short id);
 
 unsigned int find_insn(unsigned int id);
 
-void X86_postprinter(csh handle, cs_insn *insn, char *mnem, MCInst *mci);
-
 #endif

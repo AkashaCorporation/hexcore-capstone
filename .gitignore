@@ -2,20 +2,9 @@ node_modules/
 build/
 prebuilds/
 *.log
+*.txt
 .vscode/
 compile_commands.json
 .DS_Store
-
-# Capstone build artifacts (keep sources)
-deps/capstone/build/
-deps/capstone/tests/
-deps/capstone/suite/
-deps/capstone/bindings/
-deps/capstone/cstool/
-deps/capstone/docs/
-deps/capstone/packages/
-deps/capstone/msvc/
-deps/capstone/xcode/
-deps/capstone/contrib/
-deps/capstone/windows/
-deps/capstone/windowsce/
+test_v11.txt
+build_v11.txt
