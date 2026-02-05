@@ -16,12 +16,12 @@
     "install": "prebuild-install -r napi || node-gyp rebuild",
     "build": "npm run build:deps && node-gyp rebuild",
     "build:debug": "node-gyp rebuild --debug",
-    "prebuild": "npm run build:deps && prebuildify --napi --strip",
+    "prebuild": "npm run build:deps && prebuildify --napi --strip --target 22.21.1",
     "prebuild:all": "prebuildify-cross -i centos7-devtoolset7 -i alpine -i linux-armv7 -i linux-arm64",
     "test": "node test/test.js",
     "clean": "node-gyp clean",
     "prepare": "npm run build",
-    "build:deps": "cmake -S deps/capstone -B deps/capstone/build -DCMAKE_BUILD_TYPE=Release -DCAPSTONE_BUILD_TESTS=OFF -DCAPSTONE_BUILD_SHARED=OFF && cmake --build deps/capstone/build --config Release"
+    "build:deps": "cmake -S deps/capstone -B deps/capstone/build -DCMAKE_BUILD_TYPE=Release -DCAPSTONE_BUILD_TESTS=OFF -DCAPSTONE_BUILD_SHARED=OFF -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL && cmake --build deps/capstone/build --config Release"
   },
   "keywords": [
     "capstone",
