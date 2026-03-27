@@ -2,7 +2,7 @@
 
 All notable changes to `hexcore-capstone` will be documented in this file.
 
-## [1.3.3] - 2026-03-26
+## [1.3.4] - 2026-03-26
 
 ### Added
 - **Function Boundary Detection** — New `detectFunctions()` async method that scans code buffers for function prologues (x86/x64, ARM64, ARM32, MIPS) and call targets. Returns `FunctionBoundary[]` with start/end addresses, confidence scores, detection method, and thunk flag.
