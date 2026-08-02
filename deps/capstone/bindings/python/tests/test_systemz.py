@@ -1,22 +1,16 @@
 #!/usr/bin/env python
 
 # Capstone Python bindings, by Nguyen Anh Quynnh <aquynh@gmail.com>
+
 from __future__ import print_function
 from capstone import *
-from capstone.mips import *
-from xprint import to_hex, to_x
+from capstone.systemz import *
 
 
-MIPS_CODE = b"\x0C\x10\x00\x97\x00\x00\x00\x00\x24\x02\x00\x0c\x8f\xa2\x00\x00\x34\x21\x34\x56"
-MIPS_CODE2 = b"\x56\x34\x21\x34\xc2\x17\x01\x00"
-MIPS_32R6M = b"\x00\x07\x00\x07\x00\x11\x93\x7c\x01\x8c\x8b\x7c\x00\xc7\x48\xd0"
-MIPS_32R6 = b"\xec\x80\x00\x19\x7c\x43\x22\xa0"
-
+SYSZ_CODE = b"\xed\x00\x00\x00\x00\x1a\x5a\x0f\x1f\xff\xc2\x09\x80\x00\x00\x00\x07\xf7\xeb\x2a\xff\xff\x7f\x57\xe3\x01\xff\xff\x7f\x57\xeb\x00\xf0\x00\x00\x24\xb2\x4f\x00\x78\xec\x18\x00\x00\xc1\x7f"
+mask64 = lambda v: v & 0xFFFFFFFFFFFFFFFF
 all_tests = (
-        (CS_ARCH_MIPS, CS_MODE_MIPS32 + CS_MODE_BIG_ENDIAN, MIPS_CODE, "MIPS-32 (Big-endian)"),
-        (CS_ARCH_MIPS, CS_MODE_MIPS64 + CS_MODE_LITTLE_ENDIAN, MIPS_CODE2, "MIPS-64-EL (Little-endian)"),
-        (CS_ARCH_MIPS, CS_MODE_MIPS32R6 + CS_MODE_MICRO + CS_MODE_BIG_ENDIAN, MIPS_32R6M, "MIPS-32R6 | Micro (Big-endian)"),
-        (CS_ARCH_MIPS, CS_MODE_MIPS32R6 + CS_MODE_BIG_ENDIAN, MIPS_32R6, "MIPS-32R6 (Big-endian)"),
+        (CS_ARCH_SYSZ, 0, SYSZ_CODE, "SystemZ"),
 )
 
 
@@ -30,29 +24,41 @@ def print_insn_detail(insn):
 
     if len(insn.operands) > 0:
         print("\top_count: %u" % len(insn.operands))
-        c = -1
+        c = 0
         for i in insn.operands:
-            c += 1
-            if i.type == MIPS_OP_REG:
+            if i.type == SYSZ_OP_REG:
                 print("\t\toperands[%u].type: REG = %s" % (c, insn.reg_name(i.reg)))
-            if i.type == MIPS_OP_IMM:
-                print("\t\toperands[%u].type: IMM = 0x%s" % (c, to_x(i.imm)))
-            if i.type == MIPS_OP_MEM:
+            if i.type == SYSZ_OP_ACREG:
+                print("\t\toperands[%u].type: ACREG = %u" % (c, i.reg))
+            if i.type == SYSZ_OP_IMM:
+                print("\t\toperands[%u].type: IMM = 0x%x" % (c, mask64(i.imm)))
+            if i.type == SYSZ_OP_MEM:
                 print("\t\toperands[%u].type: MEM" % c)
                 if i.mem.base != 0:
                     print("\t\t\toperands[%u].mem.base: REG = %s" \
                         % (c, insn.reg_name(i.mem.base)))
+                if i.mem.index != 0:
+                    print("\t\t\toperands[%u].mem.index: REG = %s" \
+                        % (c, insn.reg_name(i.mem.index)))
+                if i.mem.length != 0:
+                    print("\t\t\toperands[%u].mem.length: 0x%x" \
+                        % (c, mask64(i.mem.length)))
                 if i.mem.disp != 0:
-                    print("\t\t\toperands[%u].mem.disp: 0x%s" \
-                        % (c, to_x(i.mem.disp)))
+                    print("\t\t\toperands[%u].mem.disp: 0x%x" \
+                        % (c, mask64(i.mem.disp)))
+            c += 1
+
+    if insn.cc:
+        print("\tConditional code: %u" % insn.cc)
 
 
 # ## Test class Cs
 def test_class():
+
     for (arch, mode, code, comment) in all_tests:
         print("*" * 16)
-        print("Platform: %s" % comment)
-        print("Code: %s" % to_hex(code))
+        print("Platform: %s" %comment)
+        print("Code: %s" % code.hex(' '))
         print("Disasm:")
 
         try:
@@ -60,11 +66,10 @@ def test_class():
             md.detail = True
             for insn in md.disasm(code, 0x1000):
                 print_insn_detail(insn)
-                print()
-
+                print ()
             print("0x%x:\n" % (insn.address + insn.size))
         except CsError as e:
-            print("ERROR: %s" % e)
+            print("ERROR: %s" %e)
 
 
 if __name__ == '__main__':

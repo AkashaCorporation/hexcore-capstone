@@ -4,14 +4,14 @@
 
 from __future__ import print_function
 from capstone import *
-from capstone.systemz import *
-from xprint import to_x, to_hex
+from capstone.xcore import *
 
 
-SYSZ_CODE = b"\xed\x00\x00\x00\x00\x1a\x5a\x0f\x1f\xff\xc2\x09\x80\x00\x00\x00\x07\xf7\xeb\x2a\xff\xff\x7f\x57\xe3\x01\xff\xff\x7f\x57\xeb\x00\xf0\x00\x00\x24\xb2\x4f\x00\x78\xec\x18\x00\x00\xc1\x7f"
+XCORE_CODE = b"\xfe\x0f\xfe\x17\x13\x17\xc6\xfe\xec\x17\x97\xf8\xec\x4f\x1f\xfd\xec\x37\x07\xf2\x45\x5b\xf9\xfa\x02\x06\x1b\x10\x09\xfd\xec\xa7"
+mask64 = lambda v: v & 0xFFFFFFFFFFFFFFFF
 
 all_tests = (
-        (CS_ARCH_SYSZ, 0, SYSZ_CODE, "SystemZ"),
+        (CS_ARCH_XCORE, 0, XCORE_CODE, "XCore"),
 )
 
 
@@ -27,13 +27,11 @@ def print_insn_detail(insn):
         print("\top_count: %u" % len(insn.operands))
         c = 0
         for i in insn.operands:
-            if i.type == SYSZ_OP_REG:
+            if i.type == XCORE_OP_REG:
                 print("\t\toperands[%u].type: REG = %s" % (c, insn.reg_name(i.reg)))
-            if i.type == SYSZ_OP_ACREG:
-                print("\t\toperands[%u].type: ACREG = %u" % (c, i.reg))
-            if i.type == SYSZ_OP_IMM:
-                print("\t\toperands[%u].type: IMM = 0x%s" % (c, to_x(i.imm)))
-            if i.type == SYSZ_OP_MEM:
+            if i.type == XCORE_OP_IMM:
+                print("\t\toperands[%u].type: IMM = 0x%x" % (c, mask64(i.imm)))
+            if i.type == XCORE_OP_MEM:
                 print("\t\toperands[%u].type: MEM" % c)
                 if i.mem.base != 0:
                     print("\t\t\toperands[%u].mem.base: REG = %s" \
@@ -41,16 +39,12 @@ def print_insn_detail(insn):
                 if i.mem.index != 0:
                     print("\t\t\toperands[%u].mem.index: REG = %s" \
                         % (c, insn.reg_name(i.mem.index)))
-                if i.mem.length != 0:
-                    print("\t\t\toperands[%u].mem.length: 0x%s" \
-                        % (c, to_x(i.mem.length)))
                 if i.mem.disp != 0:
-                    print("\t\t\toperands[%u].mem.disp: 0x%s" \
-                        % (c, to_x(i.mem.disp)))
+                    print("\t\t\toperands[%u].mem.disp: 0x%x" \
+                        % (c, mask64(i.mem.disp)))
+                if i.mem.direct != 1:
+                    print("\t\t\toperands[%u].mem.direct: -1" % c)
             c += 1
-
-    if insn.cc:
-        print("\tConditional code: %u" % insn.cc)
 
 
 # ## Test class Cs
@@ -59,7 +53,7 @@ def test_class():
     for (arch, mode, code, comment) in all_tests:
         print("*" * 16)
         print("Platform: %s" %comment)
-        print("Code: %s" % to_hex(code))
+        print("Code: %s" % code.hex(' '))
         print("Disasm:")
 
         try:

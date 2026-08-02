@@ -1,6 +1,6 @@
 {
 	"name": "hexcore-capstone",
-	"version": "1.3.4",
+	"version": "1.3.5",
 	"description": "Modern Node.js bindings for Capstone disassembler engine using N-API",
 	"main": "./index.js",
 	"module": "./index.mjs",
@@ -13,14 +13,12 @@
 		}
 	},
 	"scripts": {
-		"install": "prebuild-install || node-gyp rebuild",
+		"install": "prebuild-install -r napi || node-gyp rebuild",
 		"build": "node-gyp rebuild",
 		"build:debug": "node-gyp rebuild --debug",
 		"prebuild": "prebuildify --napi --strip",
-		"prebuild:all": "prebuildify-cross -i centos7-devtoolset7 -i alpine -i linux-armv7 -i linux-arm64",
 		"test": "node test/test.js",
-		"clean": "node-gyp clean",
-		"prepare": "npm run build"
+		"clean": "node-gyp clean"
 	},
 	"keywords": [
 		"capstone",
@@ -45,21 +43,19 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/hikarisystem/hexcore-capstone.git"
+		"url": "https://github.com/AkashaCorporation/hexcore-capstone.git"
 	},
 	"bugs": {
-		"url": "https://github.com/hikarisystem/hexcore-capstone/issues"
+		"url": "https://github.com/AkashaCorporation/hexcore-capstone/issues"
 	},
-	"homepage": "https://github.com/hikarisystem/hexcore-capstone#readme",
+	"homepage": "https://github.com/AkashaCorporation/hexcore-capstone#readme",
 	"engines": {
 		"node": ">=18.0.0"
 	},
-	"dependencies": {
-		"node-addon-api": "^7.0.0",
-		"prebuild-install": "^7.1.1"
-	},
 	"devDependencies": {
-		"node-gyp": "^10.0.0",
+		"node-addon-api": "^8.0.0",
+		"node-gyp": "^12.4.0",
+		"prebuild-install": "^7.1.1",
 		"prebuildify": "^6.0.0"
 	},
 	"files": [
@@ -68,7 +64,9 @@
 		"binding.gyp",
 		"index.js",
 		"index.mjs",
-		"index.d.ts"
+		"index.d.ts",
+		"CHANGELOG.md",
+		"README.md"
 	],
 	"binary": {
 		"napi_versions": [

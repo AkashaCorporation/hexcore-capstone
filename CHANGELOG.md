@@ -2,6 +2,20 @@
 
 All notable changes to `hexcore-capstone` will be documented in this file.
 
+## [1.3.5] - 2026-08-02
+
+### Changed
+
+- Updated the vendored Capstone core from 5.0.3 to the official stable 5.0.9 source.
+- Aligned the standalone source tree with the wrapper used by HexCore 3.8.3 RC.
+- Moved build tooling to development-only dependencies and standardized N-API prebuild installation.
+
+### Fixed
+
+- `version()` now exposes Capstone's patch component and a `fullString` value while preserving the legacy `string` field.
+- The Windows static core and N-API addon use the same MSVC runtime.
+- Native tests now fail on assertion and addon-loading errors instead of reporting a false pass.
+
 ## [1.3.4] - 2026-03-26
 
 ### Added
