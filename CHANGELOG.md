@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.6] - 2026-09-05
+
+- Preserve structured Capstone detail and instruction roles used by the current
+  HexCore function-discovery pipeline.
+- Tighten function-boundary detection and add regression coverage for semantic
+  bodies versus padding/alignment instructions.
+- Synchronize the public TypeScript declarations and documented runtime surface.
+
 All notable changes to `hexcore-capstone` will be documented in this file.
 
 ## [1.3.5] - 2026-08-02

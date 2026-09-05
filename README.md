@@ -21,7 +21,7 @@ Modern Node.js bindings for [Capstone](https://capstone-engine.org) disassembler
 npm install hexcore-capstone
 ```
 
-Published builds use N-API prebuilds. A source checkout can fall back to `node-gyp`, provided the vendored Capstone static library has been built first.
+No system dependencies required! Capstone is compiled from source automatically.
 
 ## Quick Start
 
@@ -179,6 +179,14 @@ The static Capstone core and the N-API addon must use the same MSVC runtime.
 `BUILD_STATIC_RUNTIME=ON` matches the `/MT` runtime selected by `node-gyp`.
 
 ## Changelog
+
+### v1.3.6
+- Define function ranges as `[start, endExclusive)` in the native detector.
+- Retain the legacy inclusive `end` field for the HexCore 3.8.x compatibility bridge.
+- Add native regression coverage for adjacent functions and one-byte returns.
+- Populate `instructionCount`, direct `callTargets`, and reverse `calledBy`
+  from the native detector's decoded instruction/call evidence instead of
+  publishing zero and empty arrays as unassessed facts.
 
 ### v1.3.5
 - Vendor the official Capstone 5.0.9 source.
