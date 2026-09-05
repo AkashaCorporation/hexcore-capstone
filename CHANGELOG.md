@@ -2,6 +2,10 @@
 
 ## [1.3.6] - 2026-09-05
 
+- Restore standalone install/build dependencies after monorepo synchronization:
+  node-addon-api, prebuild-install, node-gyp 12.4 and prebuildify. Native prebuilds
+  now install their own tooling with npm ci; no monorepo installer is required.
+- Validate the Windows Node 22.21.1 prebuild and native regression suite.
 - Preserve structured Capstone detail and instruction roles used by the current
   HexCore function-discovery pipeline.
 - Tighten function-boundary detection and add regression coverage for semantic
